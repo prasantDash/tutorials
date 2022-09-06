@@ -26,19 +26,39 @@ if(isset($_GET['type'])){
                 }
             } else{
                 http_response_code('404');
+                $responce = array(
+                    'status'=>'fail',
+                    'message'=>'Parameter missing'
+                );
+                echo json_encode($responce); 
+            }             
+        }elseif($getType == 'create'){
+            $bodyParams = json_decode(file_get_contents('php://input')); 
+            if(isset($bodyParams->username) && isset($bodyParams->password)){
+                $username = $bodyParams->username;
+                $password = md5($bodyParams->password);
+                if(empty($username) || empty($password)){
+                    http_response_code('404');
                     $responce = array(
                         'status'=>'fail',
-                        'message'=>'Parameter missing'
+                        'message'=>'Parameter value are missing'
                     );
-                    echo json_encode($responce); 
-            }          
+                    echo json_encode($responce);    
+                }else{
+                    $obj = new CreateUser($DBObj); 
+                    $obj->userCreate($username,$password); 
+                }
+                
+            }else{
+                http_response_code('404');
+                $responce = array(
+                    'status'=>'fail',
+                    'message'=>'Parameter missing'
+                );
+                echo json_encode($responce);
+            }
             
-            
-            
-            
-             
-        }elseif($getType == 'create'){
-            $obj = new CreateUser($DBObj); 
+           
         }elseif($getType == 'update'){
             $obj = new UpdateUser($DBObj);
         }elseif($getType == 'getAllUser'){

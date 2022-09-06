@@ -10,7 +10,7 @@ class GetUser{
     }
 
     public function getUser($username,$password){
-        $stmt = $this->con->query("SELECT id,username FROM user where username='".$username."' AND password='".$password."'");
+        $stmt = $this->con->query("SELECT id,username FROM users where username='".$username."' AND password='".$password."'");
         $data = $stmt->fetchObject();
         if(isset($data->id)){
             //Code added for generating tocken
@@ -41,8 +41,7 @@ class GetUser{
             http_response_code(404);
             $responce = array(
                 'status'=>'fail',
-                'message'=>'User not found'
-                        
+                'message'=>'User not found'                       
             );
             echo json_encode($responce);
         }

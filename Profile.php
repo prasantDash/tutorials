@@ -1,6 +1,5 @@
 <?php
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
+//header("Content-Type: application/json");
 function __autoload($className){
     include_once($className.".php");
 }
@@ -11,10 +10,9 @@ if(isset($_GET['type'])){
     if(!empty($getType)){
         if($getType == 'get'){ 
             $bodyParams = json_decode(file_get_contents('php://input')); 
-            if(isset($bodyParams->username) && isset($bodyParams->password)){
-                $username = $bodyParams->username;
-                $password = md5($bodyParams->password);
-                if(empty($username) || empty($password)){
+            if(isset($bodyParams->tocken)){
+                $tocken = $bodyParams->tocken;
+                if(empty($tocken)){
                     http_response_code('404');
                     $responce = array(
                         'status'=>'fail',
@@ -22,8 +20,8 @@ if(isset($_GET['type'])){
                     );
                     echo json_encode($responce);    
                 }else{
-                    $obj = new GetUser($DBObj);
-                    $obj->getUser($username,$password); 
+                    $DBobj = new GetUser($DBObj);
+                    $obj->getUserProfile($tocken,$DBobj); 
                 }
             } else{
                 http_response_code('404');
@@ -46,8 +44,8 @@ if(isset($_GET['type'])){
                     );
                     echo json_encode($responce);    
                 }else{
-                    $obj = new CreateUser($DBObj); 
-                    $obj->userCreate($username,$password); 
+                    //$obj = new CreateUser($DBObj); 
+                    //$obj->userCreate($username,$password); 
                 }
                 
             }else{
@@ -61,9 +59,9 @@ if(isset($_GET['type'])){
             
            
         }elseif($getType == 'update'){
-            $obj = new UpdateUser($DBObj);
+            //$obj = new UpdateUser($DBObj);
         }elseif($getType == 'getAllUser'){
-            $obj = new GetAllUser($DBObj);
+            //$obj = new GetAllUser($DBObj);
         }else{
             http_response_code('404');
             $responce = array(
